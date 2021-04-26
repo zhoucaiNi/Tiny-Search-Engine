@@ -1,5 +1,5 @@
-# CS50 TSE
-## Student name (GitHub username)
+# cs50 tse
+## Zhoucai Ni (Github: zhoucaiNi )
 
 The assignment and Specs are in a [public repo](https://github.com/cs50spring2021/tse-labs).
 Do not clone that repo; view it on GitHub.
