@@ -23,7 +23,8 @@ bool pagedir_init(const char* pageDirectory){
   }
   FILE *fp;
 
-  char* pathName = malloc( sizeof(char) * strlen(pageDirectory) + 1); 
+ char* pathName = malloc( sizeof(char) * (strlen(pageDirectory) + strlen("/.crawler") ) + 1 ); 
+
   sprintf(pathName, "%s/.crawler", pageDirectory); 
   // open the file for writing; on error -> return false
   if( ( fp = fopen(pathName, "w") ) == NULL){
@@ -49,7 +50,8 @@ void pagedir_save(const webpage_t* page, const char* pageDirectory, const int do
   FILE *fp;
   if( pageDirectory != NULL && page != NULL){
     // construct the pathname for the page file in pageDirectory
-    char* pathName = malloc( sizeof(char) * strlen(pageDirectory) + 1);
+    sprintf(pageDirectory, "%d", docID);
+    char* pathName = malloc( sizeof(char) * (strlen(pageDirectory) ) +  1);
     sprintf(pathName,"%s/%d", pageDirectory, docID);
     // open that file for writing
 if( ( fp = fopen(pathName, "w")) ==NULL ){
