@@ -19,6 +19,10 @@ LIB1 = $(LL)/common.a
 #TESTING=-DMEMTEST
 #TESTING = -APPTEST
 
+URL = http://cs50tse.cs.dartmouth.edu/tse/letters/index.html
+DIR = data/test
+DEPTH = 3
+
 CFLAGS = -Wall -pedantic -std=c11 -ggdb $(TESTING) -I$(L) -I$(LL) 
 CC = gcc
 MAKE = make
@@ -28,15 +32,20 @@ $(PROG): $(OBJS) $(LIB) $(LIB1)
 
 crawler.o: crawler.c 
 
-.PHONY: valgrind clean 
+.PHONY: valgrind moreValgrind test clean 
 
 valgrind: crawler.c
-	valgrind ./crawler http://cs50tse.cs.dartmouth.edu/tse/letters/index.html data/test 3 
+	valgrind ./crawler $(URL) $(DIR) $(DEPTH) 
+
+test: testing.sh
+	bash -v	./testing.sh &> testing.out
 
 moreValgrind: crawler.c
-	valgrind --leak-check=full --show-leak-kinds=all -v ./crawler http://cs50tse.cs.dartmouth.edu/tse/letters/index.html data/test 3 
+	valgrind --leak-check=full --show-leak-kinds=all -v ./crawler $(URL) $(DIR) $(DEPTH) 
 clean:   
 	rm -f core
 	rm -f vgcore.*
 	rm -f *~
+	rm -rf data
+	rm -f *.0
 

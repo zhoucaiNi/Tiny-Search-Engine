@@ -70,6 +70,7 @@ static void parseArgs(const int argc, char* argv[], char** seedURL, char** pageD
     // check if the maxDepth is within the range 
     if( *maxDepth < 0 || *maxDepth > 10 ){
       fprintf(stderr, "maxDepth out of range | must be [0,10] \n");
+      free(*seedURL);
       exit(5);
     }
 
@@ -164,22 +165,22 @@ static void pageScan(webpage_t* page, bag_t* pagesToCrawl, hashtable_t* pagesSee
         if( hashtable_find(pagesSeen, url) == NULL) {
           //		insert the webpage into the hashtable
 
-          if(    hashtable_insert(pagesSeen, url, item ) == true ){  
+          if(    hashtable_insert(pagesSeen, normUrl, item ) == true ){  
            //  printf("Inserting URL: %s\n", url);
-  logr("Inserting", depth, url);
+  logr("Inserting", depth, normUrl);
 
-            char* memUrl = mem_malloc(sizeof(char) * strlen(url) + 1);
-            strcpy(memUrl, url);
+            char* memUrl = mem_malloc(sizeof(char) * strlen(normUrl) + 1);
+            strcpy(memUrl, normUrl);
             webpage_t *newPage = webpage_new(memUrl, depth, NULL); 
             bag_insert(pagesToCrawl, newPage);
           }
 
         } else{
-          logr("IgnDupl", depth, url);
+          logr("IgnDupl", depth, normUrl);
         }
       } else {
         //    printf("URL not internal: %s\n", url);
-        logr("IgnExtrn", depth,url);
+        logr("IgnExtrn", depth,normUrl);
       }
 
     }
