@@ -41,11 +41,13 @@ test: testing.sh
 	bash -v	./testing.sh &> testing.out
 
 moreValgrind: crawler.c
+	mkdir $(DIR)
 	valgrind --leak-check=full --show-leak-kinds=all -v ./crawler $(URL) $(DIR) $(DEPTH) 
 clean:   
 	rm -f core
 	rm -f vgcore.*
 	rm -f *~
 	rm -rf data
-	rm -f *.0
+	rm -f *.o
+	rm -f crawler
 

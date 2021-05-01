@@ -1,8 +1,33 @@
 #!/bin/sh
 rm -rf data/
 mkdir data/
+mkdir data/test_cases
 
 TEST_DIR=../../shared/tse/output
+URL=http://cs50tse.cs.dartmouth.edu/tse/letters/index.html 
+# test cases 
+# invalid args
+
+# no args
+./crawler 
+
+# invalid directory
+./crawler $URL invalid_dir 3
+
+# invalid external url
+./crawler https://home.dartmouth.edu/ data/test_cases 1
+
+# invalid depth 
+./crawler $URL data/test_cases -1 
+
+./crawler $URL data/test_cases 11
+
+# NULL 
+
+./crawler NULL NULL NULL
+
+# Regression testing
+
 # letters depth 1 & 10 
 URL=http://cs50tse.cs.dartmouth.edu/tse/letters/index.html 
 echo "letters-0"
@@ -37,7 +62,7 @@ diff -r $TEST_DIR/toscrape-1 data/toscrape-1
 
 
 
-# wikipedia dpeth 0 & 1 
+# wikipedia depth 0 & 1 
 URL=http://cs50tse.cs.dartmouth.edu/tse/wikipedia/index.html
 echo "wikipedia-0"
 mkdir data/wikipedia-0
