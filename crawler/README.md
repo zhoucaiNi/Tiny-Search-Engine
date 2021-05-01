@@ -21,6 +21,8 @@ static void logr(const char *word, const int depth, const char *url)
 * `crawler.c` - the implementation
 * `testing.sh` - bash file to perform the test 
 * `testing.out` - result of `make test`
+* `valgrind.sh` - bash file to valgrind
+* `valgrind.out` - result of `make valgrindTest`
 
 ### Testing 
 

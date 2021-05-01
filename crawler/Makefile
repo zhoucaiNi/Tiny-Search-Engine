@@ -32,9 +32,10 @@ $(PROG): $(OBJS) $(LIB) $(LIB1)
 
 crawler.o: crawler.c 
 
-.PHONY: valgrind moreValgrind test clean 
+.PHONY: valgrind moreValgrind test clean valgrindTest
 
 valgrind: crawler.c
+	$(shell mkdir -p $(DIR) )
 	valgrind ./crawler $(URL) $(DIR) $(DEPTH) 
 
 test: testing.sh
@@ -43,6 +44,10 @@ test: testing.sh
 moreValgrind: crawler.c
 	mkdir $(DIR)
 	valgrind --leak-check=full --show-leak-kinds=all -v ./crawler $(URL) $(DIR) $(DEPTH) 
+
+valgrindTest: valgrind.sh
+	bash -v ./valgrind.sh &> valgrind.out
+
 clean:   
 	rm -f core
 	rm -f vgcore.*
