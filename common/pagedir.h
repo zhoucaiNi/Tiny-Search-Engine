@@ -4,7 +4,7 @@
  *
  *
  */
-
+#include <math.h>
 
 /******** pagedir_int ********/
 /* Construct the file name for .crawler files

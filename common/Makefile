@@ -8,7 +8,7 @@
 OBJS = pagedir.o ../libcs50/libcs50.a
 LIB = common.a
 
-CFLAGS = -Wall -pedantic -std=c11 -ggdb $(FLAGS) -I../libcs50
+CFLAGS = -Wall -pedantic -std=c11 -ggdb -lm $(FLAGS) -I../libcs50 
 CC = gcc
 MAKE = make
 
