@@ -1,6 +1,12 @@
 /*
  *
- * crawler.c
+ * crawler.c 
+ * crawls a website and retrieves webpages starting with a specified URL.
+ * It parses the initial webpage, extracts any embedded URLs and retrieves those pages,
+ * and crawls the pages found at those URLs, but limiting itself to some threshold number of hops from
+ * the seed URL, and avoiding visiting any given URL more than once. It saves the pages, and the URL and
+ * depth for each, in files. When the crawler process is complete, the indexing of the collected documents can begin.
+ * 
  *
  *
  */
@@ -22,6 +28,8 @@ static void crawl(char* seedURL, char* pageDirectory, const int maxDepth);
 static void pageScan(webpage_t* page, bag_t* pagesToCrawl, hashtable_t* pagesSeen);
 static void logr(const char *word, const int depth, const char *url);
 
+//******* main *******// 
+
 int main(const int argc, char* argv[]){
   // synax example:  ./crawler seedURL pageDirectory maxDepth 
 
@@ -32,6 +40,9 @@ int main(const int argc, char* argv[]){
   crawl(seedURL, pageDirectory, maxDepth);
   exit(0);
 }
+
+//******** parseArgs **********//
+// Given arguments from the command line, extract them into the function parameters; return only if successful.
 
 static void parseArgs(const int argc, char* argv[], char** seedURL, char** pageDirectory, int* maxDepth){
   // checks for right number of arguments 
@@ -78,6 +89,8 @@ static void parseArgs(const int argc, char* argv[], char** seedURL, char** pageD
 
 }
 
+//******* crawl *******// 
+//Do the real work of crawling from seedURL to maxDepth and saving pages in pageDirectory
 
 static void crawl(char* seedURL, char* pageDirectory, const int maxDepth){
 
@@ -125,7 +138,7 @@ static void crawl(char* seedURL, char* pageDirectory, const int maxDepth){
         //       printf("Scanning URL: %s\n", webpage_getURL(currentPage));
         // logr("scanning", currentPage->depth, currentPage->url); 
 
-    logr("Scanning", webpage_getDepth(currentPage), webpage_getURL(currentPage));
+        logr("Scanning", webpage_getDepth(currentPage), webpage_getURL(currentPage));
         pageScan(currentPage, toCrawl, visited);
       }
 
@@ -166,12 +179,16 @@ static void pageScan(webpage_t* page, bag_t* pagesToCrawl, hashtable_t* pagesSee
           //		insert the webpage into the hashtable
 
           if(    hashtable_insert(pagesSeen, normUrl, item ) == true ){  
-           //  printf("Inserting URL: %s\n", url);
-  logr("Inserting", depth, normUrl);
+            //		if that succeeded,
+            logr("Inserting", depth, normUrl);
 
             char* memUrl = mem_malloc(sizeof(char) * strlen(normUrl) + 1);
             strcpy(memUrl, normUrl);
+
+            //			create a webpage_t for it
             webpage_t *newPage = webpage_new(memUrl, depth, NULL); 
+
+            //			insert the webpage into the bag
             bag_insert(pagesToCrawl, newPage);
           }
 
@@ -179,24 +196,21 @@ static void pageScan(webpage_t* page, bag_t* pagesToCrawl, hashtable_t* pagesSee
           logr("IgnDupl", depth, normUrl);
         }
       } else {
-        //    printf("URL not internal: %s\n", url);
         logr("IgnExtrn", depth,normUrl);
       }
 
     }
+    //	free the URL
     free(normUrl);
     free(url);
   }
 
-  //		if that succeeded,
-  //			create a webpage_t for it
-  //			insert the webpage into the bag
-  //	free the URL
 
 
 }
 
-
+//***** logr *******/
+// Just log the process in a nice format
 // log one word (1-9 chars) about a given url
 static void logr(const char *word, const int depth, const char *url)
 {
