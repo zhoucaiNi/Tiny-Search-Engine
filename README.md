@@ -1,6 +1,8 @@
 # cs50 tse
 ## Zhoucai Ni (Github: zhoucaiNi )
 
+Repo for the Tiny Search Engine
+
 The assignment and Specs are in a [public repo](https://github.com/cs50spring2021/tse-labs).
 Do not clone that repo; view it on GitHub.
 Watch there for any commits that may represent updates to the assignment or specs.
