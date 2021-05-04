@@ -1,12 +1,13 @@
-# CS 50 TSE Indexer
-## Implementation Spec
+# CS 50 LAB 5 Spring 2021 
+## Index
 
-### Data structures
+### Compilation
 
-### Control flow
+### Usage
 
-### Function prototypes 
+### Assumptions
 
-### Error handling and recovery
+### Files
 
-### Testing plan
+### Testing
+
