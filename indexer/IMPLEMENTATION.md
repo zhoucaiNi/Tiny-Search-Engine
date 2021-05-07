@@ -2,9 +2,11 @@
 ## Implementation Spec
 
 ## Data structures
-We use two data strctures: a `hashtable` of that points to the word as the key and `counters` as the item, the `counters` would keep track  of the frequency of words in count and the docID in key. Both starts empty. The size of the hashtable is impossible to determine in advance, so we use 200. 
+We use two data strctures: a `hashtable` and `counter` to make a new data structure `index`
 
-`hashtable` -> `set` -> `counters`  
+The key data structure is the `index`, mapping from _word_ to _(docID, #occurrences)_ pairs. The _index_ is a _hashtable_ keyed by _word_ and storing _counters_ as items. The _counters_ is keyed by _docID_ and stores a count of the number of occurrences of that word in the document with that ID.
+
+`Index` = `hashtable` -> `set` -> `counters`  
 
 ## Control flow
 ### main 
@@ -53,3 +55,11 @@ static void indexPage(webpage_t* page, const int docId);
 ## Error handling and recovery
 
 ## Testing plan
+
+_Unit testing_. A program  _indextest_  will serve as a unit test for the  _index_  module; it reads an index file into the internal  _index_  data structure, then writes the index out to a new index file.
+
+_Integration testing_. The  _indexer_, as a complete program, will be tested by building an index from a pageDirectory, and then the resulting index will be validated by running it through the  _indextest_  to ensure it can be loaded.
+
+1.  Test  `indexer`  with various invalid arguments. 2. no arguments 3. one argument 4. three or more arguments 5. invalid  `pageDirectory`  (non-existent path) 5. invalid  `pageDirectory`  (not a crawler directory) 6. invalid  `indexFile`  (non-existent path) 7. invalid  `indexFile`  (read-only directory) 7. invalid  `indexFile`  (existing, read-only file)
+2.  Run  _indexer_  on a variety of pageDirectories and use  _indextest_  as one means of validating the resulting index.
+3.  Run  _valgrind_  on both  _indexer_  and  _indextest_  to ensure no memory leaks or errors.

@@ -9,6 +9,8 @@
  */
 #include <math.h>
 
+bool pagedir_validate(const char* pageDirectory);
+
 /******** pagedir_int ********/
 /* Construct the file name for .crawler files
  * 
@@ -36,3 +38,6 @@ bool pagedir_init(const char* pageDirectory);
  */
 
 void pagedir_save(const webpage_t* page, const char* pageDirectory, const int docID);
+
+char* pagedir_int2char(const char* pageDirectory,const int docID);
+

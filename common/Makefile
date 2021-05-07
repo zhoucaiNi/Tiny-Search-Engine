@@ -5,21 +5,23 @@
 
 # Object files, and target library
 
-OBJS = pagedir.o ../libcs50/libcs50.a
-LIB = common.a
+OBJS = pagedir.o index.o word.o ../libcs50/libcs50-given.a
+LIB = common.a 
 
-CFLAGS = -Wall -pedantic -std=c11 -ggdb -lm $(FLAGS) -I../libcs50 
+CFLAGS = -Wall -pedantic -std=c11 -ggdb -lm -I../libcs50
 CC = gcc
 MAKE = make
 
 # Build $(LIB) by archving object files
-
 
 $(LIB): $(OBJS)
 	ar cr $(LIB) $(OBJS)
 
 # Dependencies: object files
 pagedir.o: pagedir.h
+index.o: index.h ../libcs50/counters.h ../libcs50/file.h ../libcs50/hashtable.h
+word.o: word.h
+
 
 .PHONY: clean
 
