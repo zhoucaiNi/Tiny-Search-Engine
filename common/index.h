@@ -21,12 +21,7 @@ index_t* index_new(const int num_slots);
 
 
 bool index_insert(index_t* indx, const char* key, const int counter_key);
+void index_save(index_t* indx, char* indexFileName); 
+void index_delete(index_t* indx);
 
-
-void index_print(index_t* indx, FILE* fp, void (*itemprint)(FILE *fp, const char* key, void* item)); 
-
-
-
-void index_delete(index_t* indx, void (*itemdelete)(void* item));
-
-#endif // __HASHTABLE_H
+#endif // __INDEX_H

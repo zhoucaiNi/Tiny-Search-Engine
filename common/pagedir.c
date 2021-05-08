@@ -11,6 +11,7 @@
 #include <string.h>
 #include <math.h>
 #include "webpage.h"
+#include "file.h"
 
 /******  pagedir_init ******/
 // see pegedir.h for for info
@@ -95,11 +96,28 @@ bool pagedir_init(const char* pageDirectory){
 }
 
 char* pagedir_int2char(const char* pageDirectory, const int docID){
- 
 char* pathName = malloc( sizeof(char) * (strlen(pageDirectory) +floor( (log10(docID))))  +3  );
     sprintf(pathName,"%s/%d", pageDirectory, docID);
+    
 return pathName; 
 
+}
+
+webpage_t* file2page(FILE* fp){
+
+if(fp != NULL) {
+  char* url = file_readLine(fp); 
+  char* depth = file_readLine(fp);
+  char* html = file_readFile(fp); 
+  int pageDepth; 
+  sscanf(depth, "%d", &pageDepth);
+
+  webpage_t* page = webpage_new(url, pageDepth , html);
+  free(depth);
+  return page; 
+} else {
+  return NULL;
+}
 }
 
 

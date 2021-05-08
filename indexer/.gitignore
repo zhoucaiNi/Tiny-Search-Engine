@@ -1,3 +1,5 @@
 indexer
 core
 *.o
+vgcore.*
+test.index

@@ -27,30 +27,28 @@ CFLAGS = -Wall -pedantic -std=c11 -ggdb $(TESTING) -I$(L) -I$(LL)
 MAKE = make
 LLIBS = $(LIB1) $(LIB)
 
-$(PROG): $(OBJS) 
+$(PROG): $(OBJS) $(LIB1)
 	$(CC) $(CFLAGS) $(OBJS) $(LLIBS) -lm -o indexer
 
 indexer.o: indexer.c 
 
-.PHONY: run test
+.PHONY: test
 
-run: indexer
-	./indexer $(DIR) $(FILENAME)
 
 test: indexer.c 
+	bash -v ./indexTest.sh
+
+
+valgrind: indexer.c 
+	rm $(FILENAME)
 	valgrind ./indexer $(DIR) $(FILENAME)
-
-
-valgrind: crawler.c
-	$(shell mkdir -p $(DIR) )
-	valgrind ./crawler $(URL) $(DIR) $(DEPTH) 
 
 # test: testing.sh
 # 	bash -v	./testing.sh &> testing.out
 
-# moreValgrind: crawler.c
-# 	mkdir $(DIR)
-# 	valgrind --leak-check=full --show-leak-kinds=all -v ./crawler $(URL) $(DIR) $(DEPTH) 
+moreValgrind: indexer.c
+	rm $(FILENAME)
+	valgrind --leak-check=full --show-leak-kinds=all -v ./indexer $(DIR) $(FILENAME)
 
 # valgrindTest: valgrind.sh
 # 	bash -v ./valgrind.sh &> valgrind.out

@@ -17,12 +17,13 @@
 #include "hashtable.h"
 #include "index.h"
 #include "pagedir.h"
+#include "word.h"
 
 
 // global functions //
 static void parseArgs(const int argc, char* argv[], char** pageDirectory, char** indexFileName);
-static index_t* indexBuild(char* pageDirectory, char* indexFileName);
-// static void indexPage(webpage_t* page, const int docId);
+static index_t* indexBuild(char* pageDirectory);
+static void indexPage(index_t* indx, webpage_t* page, const int docId);
 
 // ******* main ******* // 
 
@@ -32,7 +33,10 @@ int main(const int argc, char* argv[])
   char* indexFileName = NULL; 
 
   parseArgs(argc, argv, &pageDirectory, &indexFileName);
-  index_t* index = indexBuild(pageDirectory, indexFileName);
+  index_t* index = indexBuild(pageDirectory);
+  index_save(index, indexFileName);
+  printf("deleting index\n");
+  index_delete(index);
 
 }
 
@@ -47,7 +51,6 @@ static void parseArgs(const int argc, char* argv[], char** pageDirectory, char**
   } else {
     // check for valid pageDirectory 
     if( pagedir_validate(argv[1] )) {
-
       *pageDirectory = argv[1];
     } else {
       fprintf(stderr, "invalid pageDirectory (no .crawler file)\n");
@@ -57,57 +60,74 @@ static void parseArgs(const int argc, char* argv[], char** pageDirectory, char**
     FILE *fp;
     if((fp = fopen(argv[2], "w") ) != NULL){
       *indexFileName = argv[2];
+      fclose(fp);
       // 
     } else {
-fprintf(stderr, "invalid indexFileName\n");
-exit(3);
+      free(*pageDirectory);
+      fprintf(stderr, "invalid indexFileName\n");
+      exit(3);
     }
   }
 }
 
-static index_t* indexBuild(char* pageDirectory, char* indexFileName)
+static index_t* indexBuild(char* pageDirectory)
 {
 
   //  create a new 'index' object
   index_t* indx = index_new(500);
- FILE *fp; 
- int currId = 1; 
- char* fileName = pagedir_int2char(pageDirectory, currId);
+  FILE *fp; 
+  int currId = 1; 
+  char* fileName = pagedir_int2char(pageDirectory, currId);
 
-    // loop over document ID numbers, counting from 1
-while( (fp = fopen(fileName, "r") ) != NULL ){
-  printf("%s\n", fileName);
+  // loop over document ID numbers, counting from 1
+  while( (fp = fopen(fileName, "r") ) != NULL ){
+    printf("%s\n", fileName);
 
-  
+    webpage_t* currPage = NULL;
     //   load a webpage from the document file 'pageDirectory/id'
     //   if successful, 
-    //     pass the webpage and docID to indexPage
-    free(fileName);
+    if( (currPage = file2page(fp)) != NULL){
+      //     pass the webpage and docID to indexPage
+      indexPage(indx, currPage, currId);
+    }
+    webpage_delete(currPage);
+
+    
     currId++;
+    free(fileName);
     fileName = pagedir_int2char(pageDirectory, currId);
+    fclose(fp);
+  }
+  free(fileName);
+  
+  return indx;
 }
 
-    return indx;
+
+static void indexPage(index_t* indx, webpage_t* page, const int docId)
+{
+
+  //  steps through each word of the webpage
+  int pos = 0;
+  char* currWord; 
+  while ((currWord = webpage_getNextWord(page, &pos)) != NULL) {
+    // printf("Found word: %s\n", currWord);
+    //    skips trivial words (less than length 3),
+    if(strlen(currWord) > 3){
+      //    normalizes the word (converts to lower case),
+      normalizeString(currWord);
+      printf("word inserted: %s\n", currWord);
+      //    looks up the word in the index,
+      //      adding the word to the index if needed
+      //    increments the count of occurrences of this word in this docID
+      index_insert(indx, currWord, docId);
+    }
+    free(currWord);
+  }
+
+
+
+
 }
 
 
-// static void indexPage(webpage_t* page, const int docId)
-// {
-
-  //  steps through each word of the webpage,
-  //    skips trivial words (less than length 3),
-  //    normalizes the word (converts to lower case),
-  //    looks up the word in the index,
-  //      adding the word to the index if needed
-  //    increments the count of occurrences of this word in this docID
-
-
-// }
-
-
-webpage_t* file2page(FILE* fp){
-
-  char* url; 
-  char* depth; 
-  webpage_t* page = webpage_new();
-}
