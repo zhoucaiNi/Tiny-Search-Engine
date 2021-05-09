@@ -7,7 +7,14 @@
  * the knowledge about how to initialize and validate a pageDirectory, and how to write and read page files, 
  * in one place... anticipating future use by the Indexer and Querier.
  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <math.h>
+#include "webpage.h"
+#include "file.h"
+
+bool pagedir_validate(const char* pageDirectory);
 
 /******** pagedir_int ********/
 /* Construct the file name for .crawler files
@@ -36,3 +43,8 @@ bool pagedir_init(const char* pageDirectory);
  */
 
 void pagedir_save(const webpage_t* page, const char* pageDirectory, const int docID);
+
+char* pagedir_int2char(const char* pageDirectory,const int docID);
+
+webpage_t* file2page(FILE* fp); 
+
