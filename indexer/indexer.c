@@ -113,7 +113,7 @@ static void indexPage(index_t* indx, webpage_t* page, const int docId)
   while ((currWord = webpage_getNextWord(page, &pos)) != NULL) {
     // printf("Found word: %s\n", currWord);
     //    skips trivial words (less than length 3),
-    if(strlen(currWord) > 3){
+    if(strlen(currWord) >= 3){
       //    normalizes the word (converts to lower case),
       normalizeString(currWord);
       printf("word inserted: %s\n", currWord);

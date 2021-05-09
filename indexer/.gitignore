@@ -3,3 +3,4 @@ core
 *.o
 vgcore.*
 test.index
+*.index

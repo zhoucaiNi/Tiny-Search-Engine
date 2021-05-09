@@ -30,10 +30,11 @@ LLIBS = $(LIB1) $(LIB)
 $(PROG): $(OBJS) $(LIB1)
 	$(CC) $(CFLAGS) $(OBJS) $(LLIBS) -lm -o indexer
 
+all: indexer indextest
+
 indexer.o: indexer.c 
 
 .PHONY: test
-
 
 test: indexer.c 
 	bash -v ./indexTest.sh
@@ -60,3 +61,4 @@ clean:
 	rm -rf data
 	rm -f *.o
 	rm -f indexer
+	rm -f *.index

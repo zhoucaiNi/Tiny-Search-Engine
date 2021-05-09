@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "index.h"
+#include "file.h"
 #include "hashtable.h"
 #include "counters.h"
 #include "mem.h"
@@ -110,8 +111,38 @@ fclose(fp);
 }
 
 void index_delete(index_t* indx){
-  hashtable_delete(indx-> hashtable, tabledelete);
+  hashtable_delete(indx->hashtable, tabledelete);
   free(indx);
+}
+
+index_t* file2index(char* oldIndexFile){
+  FILE *fp; 
+  
+  if( (fp = fopen(oldIndexFile, "r")) != NULL){
+    int num_words = file_numLines(fp);
+    index_t* index = index_new(num_words);
+
+    char* word;
+    counters_t* ctr; 
+    int docID, count; 
+
+// loops through the lines 
+for(int i = 0; i < num_words ; i++){
+word = file_readWord(fp);
+ctr = counters_new();
+// loops through the numbers
+while( fscanf(fp, "%d %d ", &docID, &count) == 2 ){
+  counters_set(ctr, docID, count); 
+  printf("%d %d \n", docID, count);
+  hashtable_insert(index->hashtable, word, ctr);
+}
+free(word);
+
+  }
+  fclose(fp);
+return index;
+}
+return NULL;
 }
 
 
