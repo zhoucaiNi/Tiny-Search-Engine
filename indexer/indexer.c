@@ -35,7 +35,6 @@ int main(const int argc, char* argv[])
   parseArgs(argc, argv, &pageDirectory, &indexFileName);
   index_t* index = indexBuild(pageDirectory);
   index_save(index, indexFileName);
-  printf("deleting index\n");
   index_delete(index);
 
 }
@@ -81,7 +80,6 @@ static index_t* indexBuild(char* pageDirectory)
 
   // loop over document ID numbers, counting from 1
   while( (fp = fopen(fileName, "r") ) != NULL ){
-    printf("%s\n", fileName);
 
     webpage_t* currPage = NULL;
     //   load a webpage from the document file 'pageDirectory/id'
@@ -111,12 +109,11 @@ static void indexPage(index_t* indx, webpage_t* page, const int docId)
   int pos = 0;
   char* currWord; 
   while ((currWord = webpage_getNextWord(page, &pos)) != NULL) {
-    // printf("Found word: %s\n", currWord);
+
     //    skips trivial words (less than length 3),
     if(strlen(currWord) >= 3){
       //    normalizes the word (converts to lower case),
       normalizeString(currWord);
-      printf("word inserted: %s\n", currWord);
       //    looks up the word in the index,
       //      adding the word to the index if needed
       //    increments the count of occurrences of this word in this docID

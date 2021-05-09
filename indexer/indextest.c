@@ -9,17 +9,21 @@
  #include <stdio.h>
  #include "index.c"
  #include "file.h"
+ #include "word.h"
 
  static void parseArgs(const int argc, char* argv[], char** oldFileName, char** newFileName);
  
-int main(const int argc, const char* argv[]){
+int main(const int argc, char* argv[]){
 
-char** oldFileName = NULL;
-char** newFileName = NULL; 
+char* oldFileName = NULL;
+char* newFileName = NULL; 
 
-parseArgs(argc, argv, oldFileName, newFileName);
-index_t* index = file2index(&oldFileName);
-index_save(index, &newFileName);
+parseArgs(argc, argv, &oldFileName, &newFileName);
+// printf("making index\n");
+index_t* index = file2index(oldFileName);
+// printf("saving index\n");
+index_save(index, newFileName);
+// printf("deleting index\n");
 index_delete(index);
 
 }
@@ -28,12 +32,12 @@ index_delete(index);
 static void parseArgs(const int argc, char* argv[], char** oldFileName, char** newFileName){
 
 if(argc != 3){
-  fprintf("invalid arguments | valid format: ./indextest oldFileName newFileName");
+  fprintf(stderr, "invalid arguments | valid format: ./indextest oldFileName newFileName\n");
   exit(1);
 } else {
   FILE *fp;
-    if((fp = fopen(argv[2], "r") ) != NULL){
-      *oldFileName = argv[2];
+    if((fp = fopen(argv[1], "r") ) != NULL){
+      *oldFileName = argv[1];
       fclose(fp);
       // 
     } else {
@@ -42,7 +46,7 @@ if(argc != 3){
       exit(2);
     }
 
-    if((fp = fopen(argv[3], "w") ) != NULL){
+    if((fp = fopen(argv[2], "w") ) != NULL){
       *newFileName = argv[2];
       fclose(fp);
       // 
