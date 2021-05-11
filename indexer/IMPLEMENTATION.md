@@ -53,6 +53,10 @@ static void indexPage(webpage_t* page, const int docId);
 
 ## Error handling and recovery
 
+command line errors errors will be caught by parseArgs before any functions are used. 
+
+Most of the functions should have defensive programming and return NULL if any pointers are invalid. 
+
 ## Testing plan
 
 _Unit testing_. A program  _indextest_  will serve as a unit test for the  _index_  module; it reads an index file into the internal  _index_  data structure, then writes the index out to a new index file.
