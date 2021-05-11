@@ -23,7 +23,7 @@ LIB1 = $(LL)/common.a
 #TESTING = -APPTEST
 
 DIR = ../crawler/data/letters-1
-FILENAME  = noindex/letters-1.index
+FILENAME  = index/letters-1.index
 
 CC = gcc
 CFLAGS = -Wall -pedantic -std=c11 -ggdb $(TESTING) -I$(L) -I$(LL) 
@@ -53,7 +53,6 @@ valgrind: indexer.c
 	valgrind ./indexer $(DIR) $(FILENAME)
 
 moreValgrind: indexer.c
-	rm $(FILENAME)
 	valgrind --leak-check=full --show-leak-kinds=all -v ./indexer $(DIR) $(FILENAME)
 
 clean:   

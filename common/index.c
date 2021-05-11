@@ -16,12 +16,14 @@
 /******** local ********/
 void tablesave(void *arg, const char* key, void* item);
 void countsave(void *arg, const int key, const int count);
+void tabledelete(void* item);
 
 /******** global ********/
-
+index_t* index_new(const int num_slots);
 bool index_insert(index_t* indx, const char* key, const int counter_key);
-void index_save(index_t* indx, char* indexFileName); 
-void index_delete(index_t* indx);
+bool index_save(index_t* indx, char* indexFileName); 
+bool index_delete(index_t* indx);
+index_t* file2index(char* oldIndexFile);
 
 /****** local *******/ 
 
@@ -51,6 +53,7 @@ typedef struct index{
 } index_t;
 
   index_t*
+
 index_new(const int num_slots)
 {
   index_t* indx = mem_malloc(sizeof(index_t));
@@ -87,9 +90,11 @@ index_insert(index_t* indx, const char* key, const int counter_key)
   return false; 
 } 
 
-  void
+  bool
 index_save(index_t* indx, char* indexFileName )
 {
+  // defensive programming 
+  if (indx != NULL && indexFileName != NULL) { 
   FILE* fp;
   if( (fp = fopen(indexFileName, "w") ) != NULL ){
 
@@ -97,19 +102,34 @@ index_save(index_t* indx, char* indexFileName )
 
   } else {
     fprintf(stderr, "files invalid");
+    return false;
   }
+  // success 
   fclose(fp);
+  return true;
+  } else {
+    return false;
+  }
 
 }
 
-void index_delete(index_t* indx){
+bool index_delete(index_t* indx){
+  if(indx != NULL){
   hashtable_delete(indx->hashtable, tabledelete);
   free(indx);
+  return true;
+  }
+  return false;
 }
 
 index_t* file2index(char* oldIndexFile){
-  FILE *fp; 
+  
+  // defensive programming
+  if(oldIndexFile == NULL){
+    return NULL;
+  }
 
+  FILE *fp; 
   if( (fp = fopen(oldIndexFile, "r")) != NULL){
     int num_words = file_numLines(fp);
     index_t* index = index_new(num_words);

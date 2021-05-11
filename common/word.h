@@ -7,7 +7,8 @@
 /******** normalizeString *********/
 /* takes an char* and return it in all lower case
  *
- * returns:
+ * returns: if success return true 
+ * else return false;
  * 
  */
 bool normalizeString(char* str);

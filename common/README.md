@@ -32,8 +32,9 @@ the index.h files have these functions
 ```c
 index_t*  index_new(const  int  num_slots);
 bool  index_insert(index_t*  indx, const  char*  key, const  int  counter_key);
-void  index_save(index_t*  indx, char*  indexFileName);
-void  index_delete(index_t*  indx);
+bool  index_save(index_t*  indx, char*  indexFileName);
+bool  index_delete(index_t*  indx);
+index_t* file2index(char* oldIndexFile); 
 ```
 ### Implementation
 `index_new` create a index (wrapper of `hashtable`) and takes in a argument for the `num_slots` of the `hashtable` 
@@ -44,10 +45,12 @@ void  index_delete(index_t*  indx);
 
 `index_delete` - free the memory allocated for the index
 
+`file2index`  - turns a index file into a index_t* and returns it. 
+
 ## word.h 
 the word.h files have these function
 ```c
-void  normalizeString(char*  str);
+bool  normalizeString(char*  str);
 ```
 ### Implementation
 `normalizeString` - takes an `char*` and turns it lower case

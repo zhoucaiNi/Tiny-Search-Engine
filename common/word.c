@@ -1,6 +1,6 @@
 /*
  *
- * word.c 
+ * word.c - helper functions for words
  *
  *
  *
