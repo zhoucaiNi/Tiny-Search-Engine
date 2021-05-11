@@ -8,20 +8,40 @@ FILENAME=test.index
 # test cases
 
 ./indexer $PAGEDIRECTORY/letters-10 index/letters-10.index letters-10.index
+invalid arguments | valid form: ./indexer pageDirectory indexFileName | see README.md for detail 
 
 ./indexer 
+invalid arguments | valid form: ./indexer pageDirectory indexFileName | see README.md for detail 
 
 ./indexer $PAGEDIRECTORY/letters-10 
+invalid arguments | valid form: ./indexer pageDirectory indexFileName | see README.md for detail 
 
 ./indexer wrongPageDirectory output.index
+invalid pageDirectory (no .crawler file)
 
 ./indexer $PAGEDIRECTORY/letters-10 noindex/letters-10.index
+invalid indexFileName
 
 ./indexer wrongPageDirectory noindex/letters-10.index
+invalid pageDirectory (no .crawler file)
 
 # using indexer to read the files and turn into index
 
 valgrind ./indexer $PAGEDIRECTORY/letters-1 index/letters-1.index
+==35208== Memcheck, a memory error detector
+==35208== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==35208== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==35208== Command: ./indexer ../crawler/data/letters-1 index/letters-1.index
+==35208== 
+==35208== 
+==35208== HEAP SUMMARY:
+==35208==     in use at exit: 0 bytes in 0 blocks
+==35208==   total heap usage: 677 allocs, 677 frees, 48,352 bytes allocated
+==35208== 
+==35208== All heap blocks were freed -- no leaks are possible
+==35208== 
+==35208== For counts of detected and suppressed errors, rerun with: -v
+==35208== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 
 ./indexer $PAGEDIRECTORY/letters-10 index/letters-10.index
 
@@ -50,6 +70,20 @@ valgrind ./indexer $PAGEDIRECTORY/letters-1 index/letters-1.index
 # indextest my index into new_index
 
 valgrind ./indextest index/letters-1.index index/newletters-1.index
+==35243== Memcheck, a memory error detector
+==35243== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==35243== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==35243== Command: ./indextest index/letters-1.index index/newletters-1.index
+==35243== 
+==35243== 
+==35243== HEAP SUMMARY:
+==35243==     in use at exit: 0 bytes in 0 blocks
+==35243==   total heap usage: 59 allocs, 59 frees, 19,856 bytes allocated
+==35243== 
+==35243== All heap blocks were freed -- no leaks are possible
+==35243== 
+==35243== For counts of detected and suppressed errors, rerun with: -v
+==35243== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 
 ./indextest index/letters-10.index index/newletters-10.index
 

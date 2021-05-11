@@ -4,10 +4,6 @@
  * indexer.c
  *
  *
- *
- *
- *
- *
  */
 
 #include <stdlib.h>
@@ -35,7 +31,6 @@ int main(const int argc, char* argv[])
   parseArgs(argc, argv, &pageDirectory, &indexFileName);
   index_t* index = indexBuild(pageDirectory);
   index_save(index, indexFileName);
-  printf("deleting index\n");
   index_delete(index);
 
 }
@@ -49,58 +44,66 @@ static void parseArgs(const int argc, char* argv[], char** pageDirectory, char**
     fprintf(stderr, "invalid arguments | valid form: ./indexer pageDirectory indexFileName | see README.md for detail \n");
     exit(1);
   } else {
-    // check for valid pageDirectory 
-    if( pagedir_validate(argv[1] )) {
-      *pageDirectory = argv[1];
+    // defensive programming
+    if(argv[1] != NULL && argv[2] != NULL){
+      // check for valid pageDirectory 
+      if( pagedir_validate(argv[1] )) {
+        *pageDirectory = argv[1];
+      } else {
+        fprintf(stderr, "invalid pageDirectory (no .crawler file)\n");
+        exit(2); 
+      }
+      // checks for writable file name 
+      FILE *fp;
+      if((fp = fopen(argv[2], "w") ) != NULL){
+        *indexFileName = argv[2];
+        fclose(fp);
+        // 
+      } else {
+        // free(*pageDirectory);
+        fprintf(stderr, "invalid indexFileName\n");
+        exit(3);
+      }
     } else {
-      fprintf(stderr, "invalid pageDirectory (no .crawler file)\n");
-      exit(2); 
-    }
-    // checks for writable file name 
-    FILE *fp;
-    if((fp = fopen(argv[2], "w") ) != NULL){
-      *indexFileName = argv[2];
-      fclose(fp);
-      // 
-    } else {
-      free(*pageDirectory);
-      fprintf(stderr, "invalid indexFileName\n");
-      exit(3);
+      exit(4);
     }
   }
 }
 
 static index_t* indexBuild(char* pageDirectory)
 {
+  // defensive programming 
+  if(pageDirectory != NULL){
+    //  create a new 'index' object
+    index_t* indx = index_new(500);
+    FILE *fp; 
+    int currId = 1; 
+    char* fileName = pagedir_int2char(pageDirectory, currId);
 
-  //  create a new 'index' object
-  index_t* indx = index_new(500);
-  FILE *fp; 
-  int currId = 1; 
-  char* fileName = pagedir_int2char(pageDirectory, currId);
+    // loop over document ID numbers, counting from 1
+    while( (fp = fopen(fileName, "r") ) != NULL ){
 
-  // loop over document ID numbers, counting from 1
-  while( (fp = fopen(fileName, "r") ) != NULL ){
-    printf("%s\n", fileName);
+      webpage_t* currPage = NULL;
+      //   load a webpage from the document file 'pageDirectory/id'
+      //   if successful, 
+      if( (currPage = file2page(fp)) != NULL){
+        //     pass the webpage and docID to indexPage
+        indexPage(indx, currPage, currId);
+      }
+      webpage_delete(currPage);
+      currId++;
+      free(fileName);
+      fileName = pagedir_int2char(pageDirectory, currId);
+      fclose(fp);
 
-    webpage_t* currPage = NULL;
-    //   load a webpage from the document file 'pageDirectory/id'
-    //   if successful, 
-    if( (currPage = file2page(fp)) != NULL){
-      //     pass the webpage and docID to indexPage
-      indexPage(indx, currPage, currId);
     }
-    webpage_delete(currPage);
-
-    
-    currId++;
     free(fileName);
-    fileName = pagedir_int2char(pageDirectory, currId);
-    fclose(fp);
+    return indx;
+  } else {
+    return NULL;
   }
-  free(fileName);
-  
-  return indx;
+
+
 }
 
 
@@ -108,21 +111,24 @@ static void indexPage(index_t* indx, webpage_t* page, const int docId)
 {
 
   //  steps through each word of the webpage
-  int pos = 0;
-  char* currWord; 
-  while ((currWord = webpage_getNextWord(page, &pos)) != NULL) {
-    // printf("Found word: %s\n", currWord);
-    //    skips trivial words (less than length 3),
-    if(strlen(currWord) >= 3){
-      //    normalizes the word (converts to lower case),
-      normalizeString(currWord);
-      printf("word inserted: %s\n", currWord);
-      //    looks up the word in the index,
-      //      adding the word to the index if needed
-      //    increments the count of occurrences of this word in this docID
-      index_insert(indx, currWord, docId);
+  // defensive programming
+  if(indx != NULL && page != NULL){
+    int pos = 0;
+    char* currWord; 
+    while ((currWord = webpage_getNextWord(page, &pos)) != NULL) {
+
+      //    skips trivial words (less than length 3),
+      if(strlen(currWord) >= 3){
+        //    normalizes the word (converts to lower case),
+        normalizeString(currWord);
+        //    looks up the word in the index,
+        //      adding the word to the index if needed
+        //    increments the count of occurrences of this word in this docID 
+        // all done in the index_insert
+        index_insert(indx, currWord, docId); 
+      }
+      free(currWord);
     }
-    free(currWord);
   }
 
 

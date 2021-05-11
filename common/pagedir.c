@@ -75,6 +75,7 @@ bool pagedir_init(const char* pageDirectory){
   if(pageDirectory == NULL){
     return false;
   }
+
   FILE *fp;
 
   char* pathName = malloc( sizeof(char) * (strlen(pageDirectory) + strlen("/.crawler") ) + 1 ); 
@@ -96,28 +97,33 @@ bool pagedir_init(const char* pageDirectory){
 }
 
 char* pagedir_int2char(const char* pageDirectory, const int docID){
-char* pathName = malloc( sizeof(char) * (strlen(pageDirectory) +floor( (log10(docID))))  +3  );
+  if(pageDirectory != NULL){
+    char* pathName = malloc( sizeof(char) * (strlen(pageDirectory) +floor( (log10(docID))))  +3  );
     sprintf(pathName,"%s/%d", pageDirectory, docID);
-    
-return pathName; 
+    return pathName; 
+  } else {
+    return NULL;
+  }
+
+
 
 }
 
 webpage_t* file2page(FILE* fp){
+  // defensive programming
+  if(fp != NULL) {
+    char* url = file_readLine(fp); 
+    char* depth = file_readLine(fp);
+    char* html = file_readFile(fp); 
+    int pageDepth; 
+    sscanf(depth, "%d", &pageDepth);
 
-if(fp != NULL) {
-  char* url = file_readLine(fp); 
-  char* depth = file_readLine(fp);
-  char* html = file_readFile(fp); 
-  int pageDepth; 
-  sscanf(depth, "%d", &pageDepth);
-
-  webpage_t* page = webpage_new(url, pageDepth , html);
-  free(depth);
-  return page; 
-} else {
-  return NULL;
-}
+    webpage_t* page = webpage_new(url, pageDepth , html);
+    free(depth);
+    return page; 
+  } else {
+    return NULL;
+  }
 }
 
 
