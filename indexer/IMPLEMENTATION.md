@@ -51,7 +51,6 @@ static void indexBuild(char* pageDirectory, char* indexFileName);
 static void indexPage(webpage_t* page, const int docId);
 ```
 
-
 ## Error handling and recovery
 
 ## Testing plan

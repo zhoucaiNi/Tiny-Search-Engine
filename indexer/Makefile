@@ -22,22 +22,22 @@ LIB1 = $(LL)/common.a
 #TESTING=-DMEMTEST
 #TESTING = -APPTEST
 
-DIR = ../crawler/data/test
-FILENAME  = test.index
+DIR = ../crawler/data/letters-1
+FILENAME  = noindex/letters-1.index
 
 CC = gcc
 CFLAGS = -Wall -pedantic -std=c11 -ggdb $(TESTING) -I$(L) -I$(LL) 
 MAKE = make
 all: $(PROG) $(PROG2)
+
 LLIBS = $(LIB1) $(LIB)
 
-$(PROG): $(OBJS) $(LIB1)
+$(PROG): $(OBJS) $(LIB1) $(LIB)
 	$(CC) $(CFLAGS) $(OBJS) $(LLIBS) -lm -o $@
 
 
-$(PROG2): $(OBJS2) $(LIB1)
+$(PROG2): $(OBJS2) $(LIB1) $(LIB)
 	$(CC) $(CFLAGS) $(OBJS2) $(LLIBS) -o $@
-
 
 
 indexer.o: indexer.c 
@@ -49,18 +49,12 @@ indextest.o: indextest.c
 test: indexer.c indextest.c
 	bash -v ./indexTest.sh &> testing.out
 
-
-
 valgrind: indexer.c 
-	rm $(FILENAME)
 	valgrind ./indexer $(DIR) $(FILENAME)
 
 moreValgrind: indexer.c
 	rm $(FILENAME)
 	valgrind --leak-check=full --show-leak-kinds=all -v ./indexer $(DIR) $(FILENAME)
-
-# valgrindTest: valgrind.sh
-# 	bash -v ./valgrind.sh &> valgrind.out
 
 clean:   
 	rm -f core

@@ -5,23 +5,43 @@ mkdir index
 PAGEDIRECTORY=../crawler/data
 FILENAME=test.index
 
+# test cases
+
+./indexer $PAGEDIRECTORY/letters-10 index/letters-10.index letters-10.index
+invalid arguments | valid form: ./indexer pageDirectory indexFileName | see README.md for detail 
+
+./indexer 
+invalid arguments | valid form: ./indexer pageDirectory indexFileName | see README.md for detail 
+
+./indexer $PAGEDIRECTORY/letters-10 
+invalid arguments | valid form: ./indexer pageDirectory indexFileName | see README.md for detail 
+
+./indexer wrongPageDirectory output.index
+invalid pageDirectory (no .crawler file)
+
+./indexer $PAGEDIRECTORY/letters-10 noindex/letters-10.index
+invalid indexFileName
+
+./indexer wrongPageDirectory noindex/letters-10.index
+invalid pageDirectory (no .crawler file)
+
 # using indexer to read the files and turn into index
 
 valgrind ./indexer $PAGEDIRECTORY/letters-1 index/letters-1.index
-==11208== Memcheck, a memory error detector
-==11208== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==11208== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
-==11208== Command: ./indexer ../crawler/data/letters-1 index/letters-1.index
-==11208== 
-==11208== 
-==11208== HEAP SUMMARY:
-==11208==     in use at exit: 0 bytes in 0 blocks
-==11208==   total heap usage: 677 allocs, 677 frees, 48,352 bytes allocated
-==11208== 
-==11208== All heap blocks were freed -- no leaks are possible
-==11208== 
-==11208== For counts of detected and suppressed errors, rerun with: -v
-==11208== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==7743== Memcheck, a memory error detector
+==7743== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==7743== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==7743== Command: ./indexer ../crawler/data/letters-1 index/letters-1.index
+==7743== 
+==7743== 
+==7743== HEAP SUMMARY:
+==7743==     in use at exit: 0 bytes in 0 blocks
+==7743==   total heap usage: 677 allocs, 677 frees, 48,352 bytes allocated
+==7743== 
+==7743== All heap blocks were freed -- no leaks are possible
+==7743== 
+==7743== For counts of detected and suppressed errors, rerun with: -v
+==7743== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 
 ./indexer $PAGEDIRECTORY/letters-10 index/letters-10.index
 
@@ -50,20 +70,20 @@ valgrind ./indexer $PAGEDIRECTORY/letters-1 index/letters-1.index
 # indextest my index into new_index
 
 valgrind ./indextest index/letters-1.index index/newletters-1.index
-==11234== Memcheck, a memory error detector
-==11234== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==11234== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
-==11234== Command: ./indextest index/letters-1.index index/newletters-1.index
-==11234== 
-==11234== 
-==11234== HEAP SUMMARY:
-==11234==     in use at exit: 0 bytes in 0 blocks
-==11234==   total heap usage: 59 allocs, 59 frees, 19,856 bytes allocated
-==11234== 
-==11234== All heap blocks were freed -- no leaks are possible
-==11234== 
-==11234== For counts of detected and suppressed errors, rerun with: -v
-==11234== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==7782== Memcheck, a memory error detector
+==7782== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==7782== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==7782== Command: ./indextest index/letters-1.index index/newletters-1.index
+==7782== 
+==7782== 
+==7782== HEAP SUMMARY:
+==7782==     in use at exit: 0 bytes in 0 blocks
+==7782==   total heap usage: 59 allocs, 59 frees, 19,856 bytes allocated
+==7782== 
+==7782== All heap blocks were freed -- no leaks are possible
+==7782== 
+==7782== For counts of detected and suppressed errors, rerun with: -v
+==7782== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 
 ./indextest index/letters-10.index index/newletters-10.index
 
@@ -88,3 +108,5 @@ valgrind ./indextest index/letters-1.index index/newletters-1.index
 ~/cs50-dev/shared/tse/indexcmp index/wikipedia-0.index index/newwikipedia-0.index
 
 ~/cs50-dev/shared/tse/indexcmp index/wikipedia-1.index index/newwikipedia-1.index
+
+exit 0

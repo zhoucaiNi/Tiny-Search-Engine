@@ -14,6 +14,14 @@
 #include "webpage.h"
 #include "file.h"
 
+/******** pagedir_validate ********/
+/* checks if the directory contain .crawler files
+ * 
+ * 
+ * Return:
+ * If there is .crawler file return true else false
+ */
+
 bool pagedir_validate(const char* pageDirectory);
 
 /******** pagedir_int ********/
@@ -44,7 +52,25 @@ bool pagedir_init(const char* pageDirectory);
 
 void pagedir_save(const webpage_t* page, const char* pageDirectory, const int docID);
 
+
+/******** pagedir_int2char ********/
+/* takes an pageDirectory and a docID, combines the two and return the char* 
+ * 
+ * 
+ * Return:
+ * if successfully convert the arguments into one char* return that char* 
+ * else return NULL
+ */
+
 char* pagedir_int2char(const char* pageDirectory,const int docID);
 
+/******** file2page ********/
+/* takes an FILE* and returns a webpage_t* 
+ * 
+ * 
+ * Return:
+ * if successful return the webpage_t with the content of the FILE* 
+ * else return NULL
+ */
 webpage_t* file2page(FILE* fp); 
 

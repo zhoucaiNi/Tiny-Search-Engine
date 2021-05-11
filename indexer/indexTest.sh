@@ -5,6 +5,20 @@ mkdir index
 PAGEDIRECTORY=../crawler/data
 FILENAME=test.index
 
+# test cases
+
+./indexer $PAGEDIRECTORY/letters-10 index/letters-10.index letters-10.index
+
+./indexer 
+
+./indexer $PAGEDIRECTORY/letters-10 
+
+./indexer wrongPageDirectory output.index
+
+./indexer $PAGEDIRECTORY/letters-10 noindex/letters-10.index
+
+./indexer wrongPageDirectory noindex/letters-10.index
+
 # using indexer to read the files and turn into index
 
 valgrind ./indexer $PAGEDIRECTORY/letters-1 index/letters-1.index
@@ -60,3 +74,5 @@ valgrind ./indextest index/letters-1.index index/newletters-1.index
 ~/cs50-dev/shared/tse/indexcmp index/wikipedia-0.index index/newwikipedia-0.index
 
 ~/cs50-dev/shared/tse/indexcmp index/wikipedia-1.index index/newwikipedia-1.index
+
+exit 0

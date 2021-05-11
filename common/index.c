@@ -27,33 +27,27 @@ void index_delete(index_t* indx);
 
 // helper function to iterate the counters 
 void tablesave(void *arg, const char* key, void* item){
-FILE* fp = arg;
-// printf("Found word: %s\n", key);
-fprintf(fp, "%s ", key);
-counters_iterate(item, fp, countsave);
-fprintf(fp, "\n");
+  FILE* fp = arg;
+  fprintf(fp, "%s ", key);
+  counters_iterate(item, fp, countsave);
+  fprintf(fp, "\n");
 
 }
 
 
 void countsave(void *arg, const int key, const int count){
-FILE* fp = arg;
-fprintf(fp, "%d %d ", key, count);
-
+  FILE* fp = arg;
+  fprintf(fp, "%d %d ", key, count);
 }
 
 void tabledelete(void* item){
   counters_delete(item);
 }
 
-
-
-
-// global 
+// global functions // 
 
 typedef struct index{
   hashtable_t* hashtable;
-
 } index_t;
 
   index_t*
@@ -82,7 +76,6 @@ index_insert(index_t* indx, const char* key, const int counter_key)
     if(wordCount == NULL){
       wordCount = counters_new();
       counters_add(wordCount, counter_key);
-      // printf("Word insert: %s\n", key);
       hashtable_insert(indx->hashtable, key, wordCount);
       return true;
       // Else add the DocID to the retrieved counter
@@ -91,22 +84,21 @@ index_insert(index_t* indx, const char* key, const int counter_key)
       return true; 
     }
   }
-  // printf("return false\n");
   return false; 
 } 
 
   void
 index_save(index_t* indx, char* indexFileName )
 {
-FILE* fp;
-if( (fp = fopen(indexFileName, "w") ) != NULL ){
+  FILE* fp;
+  if( (fp = fopen(indexFileName, "w") ) != NULL ){
 
-hashtable_iterate( indx->hashtable, fp, tablesave);
+    hashtable_iterate( indx->hashtable, fp, tablesave);
 
-} else {
-  fprintf(stderr, "files invalid");
-}
-fclose(fp);
+  } else {
+    fprintf(stderr, "files invalid");
+  }
+  fclose(fp);
 
 }
 
@@ -117,7 +109,7 @@ void index_delete(index_t* indx){
 
 index_t* file2index(char* oldIndexFile){
   FILE *fp; 
-  
+
   if( (fp = fopen(oldIndexFile, "r")) != NULL){
     int num_words = file_numLines(fp);
     index_t* index = index_new(num_words);
@@ -126,24 +118,22 @@ index_t* file2index(char* oldIndexFile){
     counters_t* ctr; 
     int docID, count; 
 
-// loops through the lines 
-for(int i = 0; i < num_words ; i++){
-word = file_readWord(fp);
-// printf("word found: %s\n", word);
-ctr = counters_new();
-// loops through the numbers
-while( fscanf(fp, "%d %d ", &docID, &count) == 2 ){
-  counters_set(ctr, docID, count); 
-  // printf("%d %d \n", docID, count);
-  hashtable_insert(index->hashtable, word, ctr);
-}
-free(word);
+    // loops through the lines 
+    for(int i = 0; i < num_words ; i++){
+      word = file_readWord(fp);
+      ctr = counters_new();
+      // loops through the numbers
+      while( fscanf(fp, "%d %d ", &docID, &count) == 2 ){
+        counters_set(ctr, docID, count); 
+        hashtable_insert(index->hashtable, word, ctr);
+      }
+      free(word);
 
+    }
+    fclose(fp);
+    return index;
   }
-  fclose(fp);
-return index;
-}
-return NULL;
+  return NULL;
 }
 
 
