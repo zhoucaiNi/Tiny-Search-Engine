@@ -1,4 +1,4 @@
-# A 
+# Tiny Search Engine implemented in C
 ## Zhoucai Ni (Github: zhoucaiNi )
 
 Repo for the Tiny Search Engine 
